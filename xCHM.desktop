@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=xCHM
+Exec=xchm
+Type=Application
+GenericName=CHM viewer
+GenericName[bg]=CHM Преглед
+GenericName[it]=Visore di file chm
+Comment=xCHM is a cross-platform GUI front-end to chmlib.
+Comment[bg]=xCHM е междуплатформен графичен клиент за chmlib
+Icon=/usr/share/pixmaps/xchm-48.xpm
+Terminal=0
+X-KDE-StartupNotify=false

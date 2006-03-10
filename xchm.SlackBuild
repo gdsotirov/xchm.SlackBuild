@@ -1,0 +1,117 @@
+#!/bin/sh
+#
+# Slackware build script for xCHM
+#
+# Original script from the Yair K's package (http://www.linuxpackages.net/pkg_details.php?id=8847) 
+# Copyright (C) 2006 Georgi D. Sotirov <gdsotirov@dir.bg>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# 
+# $Id: xchm.SlackBuild,v 1.1 2006/03/10 20:15:00 gsotirov Exp $
+#
+
+. /etc/slack-package.conf
+
+NAME=xchm
+VERSION=1.4
+BUILD=1
+
+if [ ! -d $TMP ]; then
+  mkdir -p $TMP # location to build the source
+fi
+
+PKG=$TMP/package-$NAME
+mkdir -p $PKG
+
+# Extract the sources
+cd $TMP
+SRC=$NAME-$VERSION
+echo "Extracting the sources of $SRC..."
+tar -xvzf $CWD/$SRC.tar.gz 1>$CWD/$NAME-extract.log 2>&1
+cd $SRC
+fix_source
+
+# Build the package
+echo "Configuring $SRC..."
+CFLAGS="$CFLAGS" \
+CXXFLAGS="$CFLAGS" \
+./configure --prefix=/usr \
+            --sysconfdir=/etc \
+            --enable-xmlrpc \
+	    --enable-unicode \
+	    --enable-optimize \
+            --build=$ARCH-slackware-linux \
+	    1> $CWD/$NAME-configure.log 2>&1
+# xmlrpc++ needs to be installed for --enable-xmlrpc to work
+echo "Building $SRC..."
+CFLAGS=$CFLAGS \
+CXXFLAGS=$CXXFLAGS \
+make 1> $CWD/$NAME-make.log 2>&1
+echo "Installing $SRC..."
+make DESTDIR=$PKG install-strip 1>$CWD/$NAME-install.log 2>&1
+
+# Copy the desktop file
+install -m 755 -d $PKG/opt/kde/share/applnk/Utilities
+install -m 644 $CWD/xCHM.desktop $PKG/opt/kde/share/applnk/Utilities
+
+# Create documents
+create_docs $PKG $SRC
+# Include the documents from the separate package
+if [ -e $CWD/$NAME-$VERSION-doc.tar.gz ]; then
+  pushd $PKG/usr/doc/$SRC >& /dev/null
+  tar -xvzf $CWD/$NAME-$VERSION-doc.tar.gz 1>>$CWD/$NAME-extract.log 2>&1
+  mv -f $NAME-$VERSION-doc/html .
+  rm -rf $NAME-$VERSION-doc
+  pushd html >& /dev/null
+   pngcrush -e .pn2 *.png >/dev/null 2>&1
+   rename .pn2 .png *.pn2 >/dev/null 2>&1
+  popd >& /dev/null
+  popd >& /dev/null
+fi
+
+# Copy service info
+install -m 755 -d $PKG/install
+install -m 644 $CWD/slack-desc $CWD/slack-required $PKG/install
+SRCDIR=$PKG/usr/src/slackbuilds/$NAME-$VERSION
+install -m 755 -d $SRCDIR
+install -m 644 $CWD/$NAME.SlackBuild $CWD/slack-desc $CWD/slack-required $CWD/xCHM.desktop $SRCDIR
+
+# Fix permissions
+chown -R root.root $PKG
+bin_perms $PKG
+
+# This is safer above the pushd, than putting this below, and using
+# chmod -R root.root . If for some reason $PKG doesn't exist, no damage
+# will be done. If this was to happen with this statement below, the
+# pushd fails silently, and the chown may be executed on the root or
+# tmp directories. It is best to always use an absolute path with chown/chmod.
+echo "Building $SRC package..."
+pushd $PKG >& /dev/null
+makepkg -l y -c n $TMP/$NAME-$VERSION-$ARCH-$BUILD$MYIN.tgz 1>$CWD/$NAME-makepkg.log 2>&1
+popd >& /dev/null
+pushd $TMP >& /dev/null
+md5sum $NAME-$VERSION-$ARCH-$BUILD$MYIN.tgz > $NAME-$VERSION-$ARCH-$BUILD$MYIN.tgz.md5
+cp $CWD/slack-desc $TMP/$NAME-$VERSION-$ARCH-$BUILD$MYIN.txt
+popd >& /dev/null
+
+# Clean up (optionally)
+if [ "$1" = "--cleanup" ]; then
+  echo "Cleaning up..."
+  rm -rf $TMP/$SRC
+  rm -rf $PKG
+fi
+
+echo "All done."
+
