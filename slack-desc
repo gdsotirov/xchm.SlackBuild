@@ -1,4 +1,4 @@
-xchm: xCHM 1.4 (A .chm file viewer)
+xchm: xCHM 1.9 - A .chm file viewer
 xchm:
 xchm: xCHM is a cross-platform GUI front-end to chmlib. xCHM can show the
 xchm: content tree if one is available, print pages, change font face and size,
