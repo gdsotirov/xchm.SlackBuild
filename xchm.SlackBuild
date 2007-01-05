@@ -17,13 +17,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # 
-# $Id: xchm.SlackBuild,v 1.2 2006/09/03 18:22:21 gsotirov Exp $
+# $Id: xchm.SlackBuild,v 1.3 2007/01/05 21:58:08 gsotirov Exp $
 #
 
 . /etc/slack-package.conf
 
 NAME=xchm
-VERSION=1.9
+VERSION=1.10
 BUILD=1
 
 if [ ! -d $TMP ]; then
