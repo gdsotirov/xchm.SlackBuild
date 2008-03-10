@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Slackware build script for xCHM
-# Copyright (C) 2006-2007 Georgi D. Sotirov <gdsotirov@dir.bg>
+# Copyright (C) 2006-2008 Georgi D. Sotirov <gdsotirov@dir.bg>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,13 +17,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # 
-# $Id: xchm.SlackBuild,v 1.4 2007/04/24 17:16:39 gsotirov Exp $
+# $Id: xchm.SlackBuild,v 1.5 2008/03/10 20:09:57 gsotirov Exp $
 #
 
 . ../slack-package.conf
 
 NAME=xchm
-VERSION=1.13
+VERSION=1.14
 BUILD=1
 
 if [ ! -d $TMP ]; then
@@ -45,6 +45,7 @@ fix_source
 CFLAGS=$SLKCFLAGS \
 CXXFLAGS=$SLKCFLAGS \
 ./configure --build=$ARCH-slackware-linux \
+            --host=$ARCH-slackware-linux \
             --prefix=/usr \
             --enable-unicode \
             --enable-optimize
