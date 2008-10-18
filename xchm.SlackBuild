@@ -17,7 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # 
-# $Id: xchm.SlackBuild,v 1.5 2008/03/10 20:09:57 gsotirov Exp $
+# $Id: xchm.SlackBuild,v 1.6 2008/10/18 19:45:27 gsotirov Exp $
 #
 
 . ../slack-package.conf
@@ -48,11 +48,11 @@ CXXFLAGS=$SLKCFLAGS \
             --host=$ARCH-slackware-linux \
             --prefix=/usr \
             --enable-unicode \
-            --enable-optimize
+            --enable-optimize || exit 1
 
 doxygen # Generate documentation
-make
-make DESTDIR=$PKG install-strip
+make -j4 || exit 2
+make DESTDIR=$PKG install-strip || exit 3
 
 # Copy the desktop file
 install -m 755 -d $PKG/usr/share/applications
