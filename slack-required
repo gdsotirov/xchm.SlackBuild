@@ -1,3 +1,4 @@
-chmlib >= 0.39
-wxwidgets >= 2.8.9
+chmlib >= 0.40
+openssl >= 0.9.8k | openssl-solibs >= 0.9.8k
+wxwidgets >= 2.8.10
 xmlrpc++ >= 0.7
